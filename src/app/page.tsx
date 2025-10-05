@@ -1,152 +1,103 @@
-'use client'
-import Image from 'next/image'
-import { useState, useEffect } from 'react'
-import Header from './components/Header'
+import Link from 'next/link'
+import ServerHeader from './components/ServerHeader'
 
-type Product = {
-  id: number
-  title: string
-  description: string
-  price: number
-  thumbnail: string
-  category: string
+type Category = {
+  name: string
+  slug: string
+  url: string
 }
 
-export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('')
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(false)
+export const metadata = {
+  title: 'Walmart - Shop Online for Great Deals',
+  description: 'Shop Walmart online for great deals on thousands of products. Browse by category and find everything you need.',
+  openGraph: {
+    title: 'Walmart - Shop Online for Great Deals',
+    description: 'Shop Walmart online for great deals on thousands of products.',
+  },
+}
 
-  useEffect(() => {
-    if (selectedCategory) {
-      setLoading(true)
-      fetch(`https://dummyjson.com/products/category/${selectedCategory}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setProducts(data.products || [])
-          setLoading(false)
-        })
-        .catch(() => {
-          setProducts([])
-          setLoading(false)
-        })
-    } else {
-      setProducts([])
-    }
-  }, [selectedCategory])
+async function getCategories(): Promise<Category[]> {
+  try {
+    const response = await fetch('https://dummyjson.com/products/categories', {
+      next: { revalidate: 3600 } // Cache for 1 hour
+    })
+    return response.json()
+  } catch {
+    return []
+  }
+}
+
+export default async function HomePage() {
+  const categories = await getCategories()
 
   return (
     <div className="font-sans min-h-screen">
-      <Header
-        onCategoryChange={setSelectedCategory}
-        selectedCategory={selectedCategory}
-      />
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[calc(100vh-80px)] p-8 pb-20 gap-16 sm:p-20">
-        <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full max-w-6xl">
-          {loading ? (
-            <div className="flex justify-center items-center p-8">
-              <div className="text-lg">Loading products...</div>
-            </div>
-          ) : selectedCategory ? (
-            <div>
-              <h2 className="text-2xl font-bold mb-6 capitalize">
-                {selectedCategory} Products
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                  >
-                    <Image
-                      src={product.thumbnail}
-                      alt={product.title}
-                      width={300}
-                      height={200}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-4">
-                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-                        {product.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                        {product.description}
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xl font-bold text-green-600">
-                          ${product.price}
-                        </span>
-                        <button
-                          type="button"
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
+      <ServerHeader />
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <section className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4">Welcome to Walmart</h1>
+          <p className="text-xl text-gray-600 mb-8">
+            Shop thousands of products across all categories with great deals and fast delivery
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-8">Shop by Category</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            {categories.map((category) => (
+              <Link
+                key={category.slug}
+                href={`/category/${category.slug}`}
+                className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center"
+              >
+                <div className="mb-4">
+                  <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                    <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                   </div>
-                ))}
-              </div>
-              {products.length === 0 && (
-                <div className="text-center p-8 text-gray-500">
-                  No products found in this category.
                 </div>
-              )}
+                <h3 className="font-semibold text-lg capitalize group-hover:text-blue-600 transition-colors">
+                  {category.name.replace('-', ' ')}
+                </h3>
+                <p className="text-sm text-gray-500 mt-2">Shop now →</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-16 bg-gray-50 rounded-lg p-8 text-center">
+          <h2 className="text-2xl font-bold mb-4">Why Shop with Walmart?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div>
+              <div className="w-12 h-12 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Great Prices</h3>
+              <p className="text-gray-600">Low prices on thousands of products every day</p>
             </div>
-          ) : (
-            <div className="text-center p-8 text-gray-500">
-              <h2 className="text-2xl font-bold mb-4">Welcome to Walmart!</h2>
-              <p>Select a category from the dropdown above to view products.</p>
+            <div>
+              <div className="w-12 h-12 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Fast Delivery</h3>
+              <p className="text-gray-600">Quick and reliable shipping to your door</p>
             </div>
-          )}
-        </main>
-        <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/file.svg"
-              alt="File icon"
-              width={16}
-              height={16}
-            />
-            Learn
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/window.svg"
-              alt="Window icon"
-              width={16}
-              height={16}
-            />
-            Examples
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/globe.svg"
-              alt="Globe icon"
-              width={16}
-              height={16}
-            />
-            Go to nextjs.org →
-          </a>
-        </footer>
+            <div>
+              <div className="w-12 h-12 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Quality Products</h3>
+              <p className="text-gray-600">Trusted brands and quality guaranteed</p>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   )
