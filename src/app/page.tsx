@@ -1,11 +1,6 @@
 import Link from 'next/link'
 import ServerHeader from './components/ServerHeader'
-
-type Category = {
-  name: string
-  slug: string
-  url: string
-}
+import { getCategories } from '../lib/categories'
 
 export const metadata = {
   title: 'Walmart - Shop Online for Great Deals',
@@ -16,17 +11,6 @@ export const metadata = {
     description:
       'Shop Walmart online for great deals on thousands of products.',
   },
-}
-
-async function getCategories(): Promise<Category[]> {
-  try {
-    const response = await fetch('https://dummyjson.com/products/categories', {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    })
-    return response.json()
-  } catch {
-    return []
-  }
 }
 
 export default async function HomePage() {

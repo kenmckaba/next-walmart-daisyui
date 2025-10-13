@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import ServerHeader from '../../components/ServerHeader'
+import { getCategories } from '../../../lib/categories'
 
 type Product = {
   id: number
@@ -18,24 +19,15 @@ type ProductsResponse = {
   limit: number
 }
 
-// Generate static params for known categories
-type Category = {
-  name: string
-  slug: string
-  url: string
+function slugToName(slug: string): string {
+  return slug.replace('-', ' ')
 }
 
 export async function generateStaticParams() {
-  try {
-    const response = await fetch('https://dummyjson.com/products/categories')
-    const categories: Category[] = await response.json()
-
-    return categories.map((category) => ({
-      slug: category.slug,
-    }))
-  } catch {
-    return []
-  }
+  const categories = await getCategories()
+  return categories.map((category) => ({
+    slug: category.slug,
+  }))
 }
 
 // Generate metadata for SEO
@@ -45,7 +37,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const categoryName = await getCategoryName(slug)
+  const categories = await getCategories()
+  const category = categories.find((cat) => cat.slug === slug)
+  const categoryName = category ? category.name : slugToName(slug)
 
   return {
     title: `${categoryName} Products - Walmart`,
@@ -77,33 +71,19 @@ async function getProducts(category: string): Promise<ProductsResponse | null> {
   }
 }
 
-function slugToName(slug: string): string {
-  return slug.replace('-', ' ')
-}
-
-async function getCategoryName(slug: string): Promise<string> {
-  try {
-    const response = await fetch('https://dummyjson.com/products/categories', {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    })
-    const categories: Category[] = await response.json()
-    const category = categories.find((cat) => cat.slug === slug)
-    return category ? category.name : slugToName(slug)
-  } catch {
-    return slugToName(slug)
-  }
-}
-
 export default async function CategoryPage({
   params,
 }: {
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [productsData, categoryName] = await Promise.all([
+  const [productsData, categories] = await Promise.all([
     getProducts(slug),
-    getCategoryName(slug),
+    getCategories(),
   ])
+
+  const category = categories.find((cat) => cat.slug === slug)
+  const categoryName = category ? category.name : slugToName(slug)
 
   if (!productsData || productsData.products.length === 0) {
     notFound()

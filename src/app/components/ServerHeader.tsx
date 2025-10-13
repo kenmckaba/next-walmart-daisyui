@@ -1,25 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
-
-type Category = {
-  name: string
-  slug: string
-  url: string
-}
+import { getCategories } from '../../lib/categories'
 
 type ServerHeaderProps = {
   selectedCategory?: string
-}
-
-async function getCategories(): Promise<Category[]> {
-  try {
-    const response = await fetch('https://dummyjson.com/products/categories', {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    })
-    return response.json()
-  } catch {
-    return []
-  }
 }
 
 export default async function ServerHeader({
