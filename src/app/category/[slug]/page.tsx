@@ -45,7 +45,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const categoryName = slug.replace('-', ' ')
+  const categoryName = await getCategoryName(slug)
 
   return {
     title: `${categoryName} Products - Walmart`,
@@ -77,13 +77,33 @@ async function getProducts(category: string): Promise<ProductsResponse | null> {
   }
 }
 
+function slugToName(slug: string): string {
+  return slug.replace('-', ' ')
+}
+
+async function getCategoryName(slug: string): Promise<string> {
+  try {
+    const response = await fetch('https://dummyjson.com/products/categories', {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    })
+    const categories: Category[] = await response.json()
+    const category = categories.find((cat) => cat.slug === slug)
+    return category ? category.name : slugToName(slug)
+  } catch {
+    return slugToName(slug)
+  }
+}
+
 export default async function CategoryPage({
   params,
 }: {
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const productsData = await getProducts(slug)
+  const [productsData, categoryName] = await Promise.all([
+    getProducts(slug),
+    getCategoryName(slug),
+  ])
 
   if (!productsData || productsData.products.length === 0) {
     notFound()
@@ -96,7 +116,7 @@ export default async function CategoryPage({
       <ServerHeader selectedCategory={slug} />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 capitalize">
-          {slug.replace('-', ' ')} Products ({products.length} items)
+          {categoryName} ({products.length} items)
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
