@@ -56,7 +56,7 @@ export default async function ServerHeader({
             >
               All Categories
             </Link>
-            {categories.slice(0, 8).map((category) => (
+            {categories.map((category) => (
               <Link
                 key={category.slug}
                 href={`/category/${category.slug}`}
