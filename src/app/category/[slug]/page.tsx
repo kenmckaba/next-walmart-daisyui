@@ -42,9 +42,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const categoryName = params.slug.replace('-', ' ')
+  const { slug } = await params
+  const categoryName = slug.replace('-', ' ')
 
   return {
     title: `${categoryName} Products - Walmart`,
@@ -79,9 +80,10 @@ async function getProducts(category: string): Promise<ProductsResponse | null> {
 export default async function CategoryPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const productsData = await getProducts(params.slug)
+  const { slug } = await params
+  const productsData = await getProducts(slug)
 
   if (!productsData || productsData.products.length === 0) {
     notFound()
@@ -91,10 +93,10 @@ export default async function CategoryPage({
 
   return (
     <div className="font-sans min-h-screen">
-      <ServerHeader selectedCategory={params.slug} />
+      <ServerHeader selectedCategory={slug} />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 capitalize">
-          {params.slug.replace('-', ' ')} Products ({products.length} items)
+          {slug.replace('-', ' ')} Products ({products.length} items)
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
