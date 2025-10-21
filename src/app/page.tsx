@@ -22,7 +22,6 @@ export default async function HomePage() {
   categories.map(async (category) => {
     const product = await getProducts(category.slug, 1)
     console.log('Fetched product for category:', category.slug)
-
   })
 
   return (

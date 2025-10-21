@@ -63,7 +63,7 @@ export default async function CategoryPage({
     notFound()
   }
 
- return (
+  return (
     <div className="font-sans min-h-screen">
       <ServerHeader selectedCategory={slug} />
       <div className="max-w-7xl mx-auto px-4 py-8">

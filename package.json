@@ -10,6 +10,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "cross-env": "^10.1.0",
     "daisyui": "^5.1.27",
     "next": "15.5.4",
     "react": "19.1.0",

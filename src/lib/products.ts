@@ -29,17 +29,17 @@ export async function getAllProducts(): Promise<Product[]> {
   }
 }
 
-export async function getProducts(category: string, limit: number = 0): Promise<Product[] | null> {
+export async function getProducts(
+  category: string,
+  limit: number = 0,
+): Promise<Product[] | null> {
   const url = `https://dummyjson.com/products/category/${category}${limit > 0 ? `?limit=${limit}` : ''}`
 
   try {
-    const response = await fetch(
-      url,
-      {
-        // Enable ISR (Incremental Static Regeneration)
-        next: { revalidate: 3600 }, // Revalidate every hour
-      },
-    )
+    const response = await fetch(url, {
+      // Enable ISR (Incremental Static Regeneration)
+      next: { revalidate: 3600 }, // Revalidate every hour
+    })
 
     if (!response.ok) {
       return null
@@ -51,4 +51,3 @@ export async function getProducts(category: string, limit: number = 0): Promise<
     return null
   }
 }
-
