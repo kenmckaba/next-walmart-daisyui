@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import ServerHeader from '../../components/ServerHeader'
 import { getCategories } from '../../../lib/categories'
+import { getProducts } from '@/lib/products'
 
 type Product = {
   id: number
@@ -10,13 +11,6 @@ type Product = {
   price: number
   thumbnail: string
   category: string
-}
-
-type ProductsResponse = {
-  products: Product[]
-  total: number
-  skip: number
-  limit: number
 }
 
 function slugToName(slug: string): string {
@@ -51,33 +45,13 @@ export async function generateMetadata({
   }
 }
 
-async function getProducts(category: string): Promise<ProductsResponse | null> {
-  try {
-    const response = await fetch(
-      `https://dummyjson.com/products/category/${category}`,
-      {
-        // Enable ISR (Incremental Static Regeneration)
-        next: { revalidate: 3600 }, // Revalidate every hour
-      },
-    )
-
-    if (!response.ok) {
-      return null
-    }
-
-    return response.json()
-  } catch {
-    return null
-  }
-}
-
 export default async function CategoryPage({
   params,
 }: {
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [productsData, categories] = await Promise.all([
+  const [products, categories] = await Promise.all([
     getProducts(slug),
     getCategories(),
   ])
@@ -85,13 +59,11 @@ export default async function CategoryPage({
   const category = categories.find((cat) => cat.slug === slug)
   const categoryName = category ? category.name : slugToName(slug)
 
-  if (!productsData || productsData.products.length === 0) {
+  if (!products || products.length === 0) {
     notFound()
   }
 
-  const { products } = productsData
-
-  return (
+ return (
     <div className="font-sans min-h-screen">
       <ServerHeader selectedCategory={slug} />
       <div className="max-w-7xl mx-auto px-4 py-8">

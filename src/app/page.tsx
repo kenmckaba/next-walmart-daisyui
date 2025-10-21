@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import ServerHeader from './components/ServerHeader'
-import { getCategories } from '../lib/categories'
+import { getCategories as getAllCategories } from '../lib/categories'
+import { getAllProducts, getProducts } from '@/lib/products'
 
 export const metadata = {
   title: 'Walmart - Shop Online for Great Deals',
@@ -14,7 +15,15 @@ export const metadata = {
 }
 
 export default async function HomePage() {
-  const categories = await getCategories()
+  const categories = await getAllCategories()
+  const productImages = new Map<string, string>()
+
+  console.log('Fetched categories:', categories.length)
+  categories.map(async (category) => {
+    const product = await getProducts(category.slug, 1)
+    console.log('Fetched product for category:', category.slug)
+
+  })
 
   return (
     <div className="font-sans min-h-screen">
@@ -38,7 +47,7 @@ export default async function HomePage() {
                 className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center"
               >
                 <div className="mb-4">
-                  <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                  <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors">
                     <svg
                       className="w-8 h-8 text-blue-600"
                       fill="none"
