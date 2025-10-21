@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import ServerHeader from '../../components/ServerHeader'
-import { getCategories } from '../../../lib/categories'
 import { getProducts } from '@/lib/products'
+import { getCategories } from '../../../lib/categories'
+import ServerHeader from '../../components/ServerHeader'
 
 type Product = {
   id: number

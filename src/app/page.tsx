@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import ServerHeader from './components/ServerHeader'
-import { getCategories as getAllCategories } from '../lib/categories'
 import { getAllProducts, getProducts } from '@/lib/products'
+import { getCategories as getAllCategories } from '../lib/categories'
+import ServerHeader from './components/ServerHeader'
 
 export const metadata = {
   title: 'Walmart - Shop Online for Great Deals',
