@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { getAllProducts, getProducts } from '@/lib/products'
 import { getCategories as getAllCategories } from '../lib/categories'
@@ -19,10 +20,19 @@ export default async function HomePage() {
   const productImages = new Map<string, string>()
 
   console.log('Fetched categories:', categories.length)
-  categories.map(async (category) => {
-    const product = await getProducts(category.slug, 1)
-    console.log('Fetched product for category:', category.slug)
-  })
+  await Promise.all(
+    categories.map(async (category) => {
+      const product = await getProducts(category.slug, 1)
+      console.log(
+        'Fetched product for category:',
+        category.slug,
+        product[0].title,
+      )
+      productImages.set(category.slug, product[0]?.thumbnail)
+      const test = productImages.get(category.slug)
+      console.log('Got:', test)
+    }),
+  )
 
   return (
     <div className="font-sans min-h-screen">
@@ -46,21 +56,22 @@ export default async function HomePage() {
                 className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center"
               >
                 <div className="mb-4">
-                  <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors">
-                    <svg
-                      className="w-8 h-8 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+                  <div className="mx-auto w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                    {(() => {
+                      console.log(
+                        'thumbnail:',
+                        category.slug,
+                        productImages.get(category.slug),
+                      )
+                      return null // Explicitly return null
+                    })()}
+                    <Image
+                      src={productImages.get(category.slug) || ''}
+                      alt={category.name}
+                      width={200}
+                      height={200}
+                      className="w-full h-48 object-cover"
+                    />
                   </div>
                 </div>
                 <h3 className="font-semibold text-lg capitalize group-hover:text-blue-600 transition-colors">

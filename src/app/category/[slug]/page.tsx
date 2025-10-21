@@ -4,15 +4,6 @@ import { getProducts } from '@/lib/products'
 import { getCategories } from '../../../lib/categories'
 import ServerHeader from '../../components/ServerHeader'
 
-type Product = {
-  id: number
-  title: string
-  description: string
-  price: number
-  thumbnail: string
-  category: string
-}
-
 function slugToName(slug: string): string {
   return slug.replace('-', ' ')
 }
