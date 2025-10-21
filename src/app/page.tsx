@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getAllProducts, getProducts } from '@/lib/products'
+import { getProducts } from '@/lib/products'
 import { getCategories as getAllCategories } from '../lib/categories'
 import ServerHeader from './components/ServerHeader'
 
