@@ -66,7 +66,7 @@ export default async function CategoryPage({
           {products.map((product) => (
             <article
               key={product.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:bg-blue-50 transition-shadow"
             >
               <Image
                 src={product.thumbnail}
