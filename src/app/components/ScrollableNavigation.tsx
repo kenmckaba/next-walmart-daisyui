@@ -30,8 +30,23 @@ export default function ScrollableNavigation({
     checkScrollButtons()
     const container = scrollContainerRef.current
     if (container) {
-      container.addEventListener('scroll', checkScrollButtons)
-      return () => container.removeEventListener('scroll', checkScrollButtons)
+      // Restore scroll position from sessionStorage
+      const savedScrollPosition = sessionStorage.getItem('nav-scroll-position')
+      if (savedScrollPosition) {
+        container.scrollLeft = parseInt(savedScrollPosition, 10)
+      }
+
+      const handleScroll = () => {
+        checkScrollButtons()
+        // Save scroll position to sessionStorage
+        sessionStorage.setItem(
+          'nav-scroll-position',
+          container.scrollLeft.toString(),
+        )
+      }
+
+      container.addEventListener('scroll', handleScroll)
+      return () => container.removeEventListener('scroll', handleScroll)
     }
   }, [checkScrollButtons])
 
