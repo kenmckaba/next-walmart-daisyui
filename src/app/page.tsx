@@ -57,14 +57,6 @@ export default async function HomePage() {
               >
                 <div className="mb-4">
                   <div className="mx-auto w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors">
-                    {(() => {
-                      console.log(
-                        'thumbnail:',
-                        category.slug,
-                        productImages.get(category.slug),
-                      )
-                      return null // Explicitly return null
-                    })()}
                     <Image
                       src={productImages.get(category.slug) || ''}
                       alt={category.name}

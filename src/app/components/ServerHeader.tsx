@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getCategories } from '../../lib/categories'
+import ScrollableNavigation from './ScrollableNavigation'
 
 type ServerHeaderProps = {
   selectedCategory?: string
@@ -28,32 +29,11 @@ export default async function ServerHeader({
         </div>
 
         {/* Categories Navigation */}
-        <nav className="flex items-center">
-          <div className="flex flex-wrap gap-2 mr-4">
-            <Link
-              href="/"
-              className={`px-3 py-1 rounded text-sm transition-colors ${
-                !selectedCategory
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              All Categories
-            </Link>
-            {categories.map((category) => (
-              <Link
-                key={category.slug}
-                href={`/category/${category.slug}`}
-                className={`px-3 py-1 rounded text-sm transition-colors ${
-                  selectedCategory === category.slug
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {category.name}
-              </Link>
-            ))}
-          </div>
+        <nav className="flex items-center flex-1 max-w-4xl">
+          <ScrollableNavigation
+            categories={categories}
+            selectedCategory={selectedCategory}
+          />
         </nav>
       </div>
     </header>
