@@ -84,7 +84,7 @@ export default async function CategoryPage({
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-bold text-green-600">
-                    ${product.price}
+                    ${product.price.toLocaleString()}
                   </span>
                   <button
                     type="button"
