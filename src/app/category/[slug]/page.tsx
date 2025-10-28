@@ -79,9 +79,9 @@ export default async function CategoryPage({
                 <h2 className="font-semibold text-lg mb-2 line-clamp-2">
                   {product.title}
                 </h2>
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                  {product.description}
-                </p>
+                <div className="h-16 mb-3 overflow-y-auto pr-2 description-scroll">
+                  <p className="text-gray-600 text-sm">{product.description}</p>
+                </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-bold text-green-600">
                     ${product.price}
