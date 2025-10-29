@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getCategories } from '../../lib/categories'
 import ScrollableNavigation from './ScrollableNavigation'
+import CartDisplay from './CartDisplay'
 
 type ServerHeaderProps = {
   selectedCategory?: string
@@ -35,6 +36,11 @@ export default async function ServerHeader({
             selectedCategory={selectedCategory}
           />
         </nav>
+
+        {/* Cart Display */}
+        <div className="ml-4">
+          <CartDisplay />
+        </div>
       </div>
     </header>
   )
