@@ -1,15 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useCart } from '../context/CartContext'
 
 export default function CartDisplay() {
   const { items, getTotalItems, getTotalPrice, removeFromCart, updateQuantity } = useCart()
   const [isOpen, setIsOpen] = useState(false)
+  const cartRef = useRef<HTMLDivElement>(null)
+
+  // Close cart when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }
+  }, [isOpen])
 
   if (getTotalItems() === 0) {
     return (
-      <div className="relative">
+      <div ref={cartRef} className="relative">
         <button
           type="button"
           className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-500 rounded"
@@ -25,7 +42,7 @@ export default function CartDisplay() {
   }
 
   return (
-    <div className="relative">
+    <div ref={cartRef} className="relative">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
