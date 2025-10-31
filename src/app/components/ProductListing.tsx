@@ -1,8 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { useCart } from '../context/CartContext'
 import type { Product } from '../../lib/products'
+import { useCart } from '../context/CartContext'
 
 type ProductListingProps = {
   products: Product[]

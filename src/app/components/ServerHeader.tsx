@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getCategories } from '../../lib/categories'
-import ScrollableNavigation from './ScrollableNavigation'
 import CartDisplay from './CartDisplay'
+import ScrollableNavigation from './ScrollableNavigation'
 
 type ServerHeaderProps = {
   selectedCategory?: string

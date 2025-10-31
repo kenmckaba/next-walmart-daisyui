@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 import { getProducts } from '@/lib/products'
 import { getCategories } from '../../../lib/categories'
-import ServerHeader from '../../components/ServerHeader'
 import ProductListing from '../../components/ProductListing'
+import ServerHeader from '../../components/ServerHeader'
 
 function slugToName(slug: string): string {
   return slug.replace('-', ' ')
