@@ -14,7 +14,7 @@ export default async function ServerHeader({
   const categories = await getCategories()
 
   return (
-    <header className="w-full bg-white shadow-sm border-b border-gray-200 px-4 py-3">
+    <header className="w-full bg-white shadow-sm border-b border-gray-200 px-4 py-1">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Walmart Logo */}
         <div className="flex items-center">
@@ -22,9 +22,9 @@ export default async function ServerHeader({
             <Image
               src="/walmart-logo.png"
               alt="Walmart Logo"
-              width={120}
-              height={40}
-              className="h-8 w-auto cursor-pointer"
+              width={180}
+              height={60}
+              className="h-12 w-auto cursor-pointer"
             />
           </Link>
         </div>
