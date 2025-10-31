@@ -29,7 +29,7 @@ export default function ProductListing({ products }: ProductListingProps) {
             alt={product.title}
             width={300}
             height={200}
-            className="w-full h-48 object-cover"
+            className="w-full h-48 object-contain"
           />
           <div className="p-4">
             <h2 className="font-semibold text-lg mb-2 line-clamp-2">

@@ -62,7 +62,7 @@ export default async function HomePage() {
                       alt={category.name}
                       width={200}
                       height={200}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-48 object-contain"
                     />
                   </div>
                 </div>
