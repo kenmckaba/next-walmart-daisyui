@@ -78,12 +78,17 @@ export default async function HomePage() {
             <h2 className="text-2xl font-bold mb-8 max-w-7xl mx-auto">
               Shop by Category
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            <div
+              className="grid gap-6 justify-items-center justify-center"
+              style={{
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 240px))',
+              }}
+            >
               {categories.map((category) => (
                 <Link
                   key={category.slug}
                   href={`/category/${category.slug}`}
-                  className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center"
+                  className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center w-full max-w-[240px]"
                 >
                   <div className="mb-4 relative">
                     <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors"></div>
