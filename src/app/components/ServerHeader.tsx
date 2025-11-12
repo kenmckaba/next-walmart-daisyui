@@ -14,10 +14,10 @@ export default async function ServerHeader({
   const categories = await getCategories()
 
   return (
-    <header className="w-full bg-white shadow-sm border-b border-gray-200 px-4 py-1">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <header className="w-full bg-white shadow-sm border-b border-gray-200 py-1">
+      <div className="flex items-center w-full pl-4 pr-4">
         {/* Walmart Logo */}
-        <div className="flex items-center">
+        <div className="flex items-center flex-shrink-0">
           <Link href="/">
             <Image
               src="/walmart-logo.png"
@@ -29,16 +29,16 @@ export default async function ServerHeader({
           </Link>
         </div>
 
-        {/* Categories Navigation */}
-        <nav className="flex items-center flex-1 max-w-4xl">
+        {/* Categories Navigation - takes remaining space */}
+        <nav className="flex items-center flex-1 mx-4 min-w-0">
           <ScrollableNavigation
             categories={categories}
             selectedCategory={selectedCategory}
           />
         </nav>
 
-        {/* Cart Display */}
-        <div className="ml-4">
+        {/* Cart Display - sticks to right */}
+        <div className="flex-shrink-0">
           <CartDisplay />
         </div>
       </div>

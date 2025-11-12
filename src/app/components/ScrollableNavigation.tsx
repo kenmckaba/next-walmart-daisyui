@@ -63,7 +63,7 @@ export default function ScrollableNavigation({
   }
 
   return (
-    <div className="flex items-center max-w-2xl">
+    <div className="flex items-center w-full">
       {/* All Categories Button - Fixed on the left */}
       <Link
         href="/"
