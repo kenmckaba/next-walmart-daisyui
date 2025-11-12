@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getProducts } from '@/lib/products'
 import { getCategories as getAllCategories } from '../lib/categories'
 import ServerHeader from './components/ServerHeader'
+import StructuredData from './components/StructuredData'
 
 export const metadata = {
   title: 'Walmart - Shop Online for Great Deals',
@@ -22,6 +23,7 @@ export default async function HomePage() {
   console.log('Fetched categories:', categories.length)
   await Promise.all(
     categories.map(async (category) => {
+      // get first product image for category display
       const product = await getProducts(category.slug, 1)
       console.log(
         'Fetched product for category:',
@@ -34,120 +36,147 @@ export default async function HomePage() {
     }),
   )
 
+  // Structured data for home page
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Walmart',
+    description:
+      'Shop Walmart online for great deals on thousands of products. Browse by category and find everything you need.',
+    url: 'https://walmart.com',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://walmart.com/search?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+    sameAs: [
+      'https://www.facebook.com/walmart',
+      'https://www.twitter.com/walmart',
+      'https://www.instagram.com/walmart',
+      'https://www.youtube.com/walmart',
+    ],
+  }
+
   return (
-    <div className="font-sans min-h-screen">
-      <ServerHeader />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <section className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Welcome to Walmart</h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Shop thousands of products across all categories with great deals
-            and fast delivery
-          </p>
-        </section>
+    <>
+      <StructuredData data={structuredData} />
+      <div className="font-sans min-h-screen">
+        <ServerHeader />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <section className="text-center mb-12">
+            <h1 className="text-4xl font-bold mb-4">Welcome to Walmart</h1>
+            <p className="text-xl text-gray-600 mb-8">
+              Shop thousands of products across all categories with great deals
+              and fast delivery
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-8">Shop by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            {categories.map((category) => (
-              <Link
-                key={category.slug}
-                href={`/category/${category.slug}`}
-                className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center"
-              >
-                <div className="mb-4 relative">
-                  <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Image
-                      src={productImages.get(category.slug) || ''}
-                      alt={category.name}
-                      width={500}
-                      height={500}
-                      className="w-40 h-40 object-contain"
-                    />
+          <section>
+            <h2 className="text-2xl font-bold mb-8">Shop by Category</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+              {categories.map((category) => (
+                <Link
+                  key={category.slug}
+                  href={`/category/${category.slug}`}
+                  className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center"
+                >
+                  <div className="mb-4 relative">
+                    <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Image
+                        src={productImages.get(category.slug) || ''}
+                        alt={category.name}
+                        width={500}
+                        height={500}
+                        className="w-40 h-40 object-contain"
+                      />
+                    </div>
                   </div>
-                </div>
-                <h3 className="font-semibold text-lg capitalize group-hover:text-blue-600 transition-colors">
-                  {category.name}
-                </h3>
-                <p className="text-sm text-gray-500 mt-2">Shop now →</p>
-              </Link>
-            ))}
-          </div>
-        </section>
+                  <h3 className="font-semibold text-lg capitalize group-hover:text-blue-600 transition-colors">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-2">Shop now →</p>
+                </Link>
+              ))}
+            </div>
+          </section>
 
-        <section className="mt-16 bg-gray-50 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Why Shop with Walmart?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-            <div>
-              <div className="w-12 h-12 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                  />
-                </svg>
+          <section className="mt-16 bg-gray-50 rounded-lg p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4">Why Shop with Walmart?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+              <div>
+                <div className="w-12 h-12 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                    />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Great Prices</h3>
+                <p className="text-gray-600">
+                  Low prices on thousands of products every day
+                </p>
               </div>
-              <h3 className="font-semibold text-lg mb-2">Great Prices</h3>
-              <p className="text-gray-600">
-                Low prices on thousands of products every day
-              </p>
-            </div>
-            <div>
-              <div className="w-12 h-12 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <svg
-                  className="w-6 h-6 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                  />
-                </svg>
+              <div>
+                <div className="w-12 h-12 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Fast Delivery</h3>
+                <p className="text-gray-600">
+                  Quick and reliable shipping to your door
+                </p>
               </div>
-              <h3 className="font-semibold text-lg mb-2">Fast Delivery</h3>
-              <p className="text-gray-600">
-                Quick and reliable shipping to your door
-              </p>
-            </div>
-            <div>
-              <div className="w-12 h-12 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-4">
-                <svg
-                  className="w-6 h-6 text-purple-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+              <div>
+                <div className="w-12 h-12 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-purple-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Quality Products</h3>
+                <p className="text-gray-600">
+                  Trusted brands and quality guaranteed
+                </p>
               </div>
-              <h3 className="font-semibold text-lg mb-2">Quality Products</h3>
-              <p className="text-gray-600">
-                Trusted brands and quality guaranteed
-              </p>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

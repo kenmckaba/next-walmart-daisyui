@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useCart } from '../context/CartContext'
 
@@ -93,9 +94,11 @@ export default function CartDisplay() {
                   className="flex items-center gap-3 pb-3 border-b border-gray-100"
                 >
                   <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0">
-                    <img
+                    <Image
                       src={item.product.thumbnail}
                       alt={item.product.title}
+                      width={48}
+                      height={48}
                       className="w-full h-full object-cover rounded"
                     />
                   </div>

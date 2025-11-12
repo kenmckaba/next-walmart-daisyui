@@ -8,7 +8,7 @@ type Category = {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch categories for dynamic sitemap generation
-  const baseUrl = 'https://your-domain.com' // Replace with your actual domain
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://walmart.com'
 
   try {
     const response = await fetch('https://dummyjson.com/products/categories')
@@ -22,13 +22,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
 
     return [
+      // Homepage - highest priority
       {
         url: baseUrl,
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 1,
       },
+      // Category pages - high priority
       ...categoryUrls,
+      // Static pages (if you add them later)
+      {
+        url: `${baseUrl}/about`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly',
+        priority: 0.5,
+      },
+      {
+        url: `${baseUrl}/contact`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly',
+        priority: 0.5,
+      },
     ]
   } catch {
     return [

@@ -15,18 +15,6 @@ export type ProductsResponse = {
   limit: number
 }
 
-export async function getAllProducts(): Promise<Product[]> {
-  try {
-    const response = await fetch('https://dummyjson.com/products', {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    })
-    const prods = await response.json()
-    return prods.products
-  } catch {
-    return []
-  }
-}
-
 export async function getProducts(
   category: string,
   limit: number = 0,

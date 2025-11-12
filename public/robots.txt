@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# Optimize crawling
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://walmart.com/sitemap.xml
+
+# Block admin and private areas (if any in future)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /checkout/
+Disallow: /cart/
+
+# Allow important directories
+Allow: /category/
+Allow: /public/
+
+# Block dynamic parameters that might create duplicate content
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+Disallow: /*?*page=
+
+# Social media and SEO
+Allow: /robots.txt
+Allow: /sitemap.xml
+Allow: /favicon.ico
