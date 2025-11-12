@@ -65,8 +65,8 @@ export default async function HomePage() {
       <StructuredData data={structuredData} />
       <div className="font-sans min-h-screen">
         <ServerHeader />
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <section className="text-center mb-12">
+        <div className="w-full px-4 py-8">
+          <section className="text-center mb-12 max-w-7xl mx-auto">
             <h1 className="text-4xl font-bold mb-4">Welcome to Walmart</h1>
             <p className="text-xl text-gray-600 mb-8">
               Shop thousands of products across all categories with great deals
@@ -75,7 +75,9 @@ export default async function HomePage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold mb-8">Shop by Category</h2>
+            <h2 className="text-2xl font-bold mb-8 max-w-7xl mx-auto">
+              Shop by Category
+            </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
               {categories.map((category) => (
                 <Link

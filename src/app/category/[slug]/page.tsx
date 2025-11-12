@@ -88,8 +88,8 @@ export default async function CategoryPage({
       <StructuredData data={structuredData} />
       <div className="font-sans min-h-screen">
         <ServerHeader selectedCategory={slug} />
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8 capitalize">
+        <div className="w-full px-4 py-8">
+          <h1 className="text-3xl font-bold mb-8 capitalize max-w-7xl mx-auto">
             {categoryName} ({products.length} items)
           </h1>
 
