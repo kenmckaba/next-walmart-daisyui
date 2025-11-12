@@ -55,14 +55,15 @@ export default async function HomePage() {
                 href={`/category/${category.slug}`}
                 className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center"
               >
-                <div className="mb-4">
-                  <div className="mx-auto w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                <div className="mb-4 relative">
+                  <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors"></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
                     <Image
                       src={productImages.get(category.slug) || ''}
                       alt={category.name}
-                      width={200}
-                      height={200}
-                      className="w-full h-48 object-contain"
+                      width={500}
+                      height={500}
+                      className="w-40 h-40 object-contain"
                     />
                   </div>
                 </div>
