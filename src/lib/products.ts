@@ -1,19 +1,11 @@
-// Shared utility for category operations
-export type Product = {
-  id: number
-  title: string
-  description: string
-  price: number
-  thumbnail: string
-  category: string
-}
+import {
+  APIFetchError,
+  APIValidationError,
+  fetchAndValidate,
+} from './api-validation'
+import { type Product, ProductsResponseSchema } from './schemas'
 
-export type ProductsResponse = {
-  products: Product[]
-  total: number
-  skip: number
-  limit: number
-}
+export type { Product }
 
 export async function getProducts(
   category: string,
@@ -21,18 +13,33 @@ export async function getProducts(
 ): Promise<Product[]> {
   try {
     const url = `https://dummyjson.com/products/category/${category}${limit > 0 ? `?limit=${limit}` : ''}`
-    const response = await fetch(url, {
-      // Enable ISR (Incremental Static Regeneration)
-      next: { revalidate: 3600 }, // Revalidate every hour
-    })
 
-    if (!response.ok) {
-      return []
+    const validatedResponse = await fetchAndValidate(
+      url,
+      ProductsResponseSchema,
+      {
+        // Enable ISR (Incremental Static Regeneration)
+        next: { revalidate: 3600 }, // Revalidate every hour
+      },
+    )
+
+    return validatedResponse.products
+  } catch (error) {
+    if (error instanceof APIValidationError) {
+      console.error(
+        `Products API returned invalid data for category "${category}":`,
+        error.issues,
+      )
+    } else if (error instanceof APIFetchError) {
+      console.error(
+        `Failed to fetch products for category "${category}": ${error.message}`,
+      )
+    } else {
+      console.error(
+        `Unexpected error fetching products for category "${category}":`,
+        error,
+      )
     }
-
-    const resp: ProductsResponse = await response.json()
-    return resp.products
-  } catch {
     return []
   }
 }

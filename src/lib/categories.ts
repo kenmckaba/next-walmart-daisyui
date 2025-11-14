@@ -1,18 +1,32 @@
-// Shared utility for category operations
-export type Category = {
-  name: string
-  slug: string
-  url: string
-}
+import {
+  APIFetchError,
+  APIValidationError,
+  fetchAndValidate,
+} from './api-validation'
+import { CategoriesResponseSchema, type Category } from './schemas'
+
+export type { Category }
 
 // Cached category fetcher - Next.js will automatically deduplicate this
 export async function getCategories(): Promise<Category[]> {
   try {
-    const response = await fetch('https://dummyjson.com/products/categories', {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    })
-    return response.json()
-  } catch {
+    const validatedResponse = await fetchAndValidate(
+      'https://dummyjson.com/products/categories',
+      CategoriesResponseSchema,
+      {
+        next: { revalidate: 3600 }, // Cache for 1 hour
+      },
+    )
+
+    return validatedResponse
+  } catch (error) {
+    if (error instanceof APIValidationError) {
+      console.error('Categories API returned invalid data:', error.issues)
+    } else if (error instanceof APIFetchError) {
+      console.error(`Failed to fetch categories: ${error.message}`)
+    } else {
+      console.error('Unexpected error fetching categories:', error)
+    }
     return []
   }
 }

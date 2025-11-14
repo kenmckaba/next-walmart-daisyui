@@ -7,12 +7,15 @@ import {
   useContext,
   useState,
 } from 'react'
+import { validateAPIResponse } from '../../lib/api-validation'
 import type { Product } from '../../lib/products'
+import {
+  AddToCartSchema,
+  type CartItem,
+  UpdateQuantitySchema,
+} from '../../lib/schemas'
 
-export type CartItem = {
-  product: Product
-  quantity: number
-}
+export type { CartItem }
 
 type CartContextType = {
   items: CartItem[]
@@ -30,21 +33,38 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
 
   const addToCart = useCallback((product: Product) => {
-    setItems((currentItems) => {
-      const existingItem = currentItems.find(
-        (item) => item.product.id === product.id,
+    try {
+      // Validate the input using Zod schema
+      const validatedInput = validateAPIResponse(
+        AddToCartSchema,
+        { product, quantity: 1 },
+        'addToCart input',
       )
 
-      if (existingItem) {
-        return currentItems.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
+      setItems((currentItems) => {
+        const existingItem = currentItems.find(
+          (item) => item.product.id === validatedInput.product.id,
         )
-      } else {
-        return [...currentItems, { product, quantity: 1 }]
-      }
-    })
+
+        if (existingItem) {
+          return currentItems.map((item) =>
+            item.product.id === validatedInput.product.id
+              ? { ...item, quantity: item.quantity + validatedInput.quantity }
+              : item,
+          )
+        } else {
+          return [
+            ...currentItems,
+            {
+              product: validatedInput.product,
+              quantity: validatedInput.quantity,
+            },
+          ]
+        }
+      })
+    } catch (error) {
+      console.error('Failed to add item to cart:', error)
+    }
   }, [])
 
   const removeFromCart = useCallback((productId: number) => {
@@ -55,16 +75,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updateQuantity = useCallback(
     (productId: number, quantity: number) => {
-      if (quantity <= 0) {
-        removeFromCart(productId)
-        return
-      }
+      try {
+        // Validate the input using Zod schema
+        const validatedInput = validateAPIResponse(
+          UpdateQuantitySchema,
+          { productId, quantity },
+          'updateQuantity input',
+        )
 
-      setItems((currentItems) =>
-        currentItems.map((item) =>
-          item.product.id === productId ? { ...item, quantity } : item,
-        ),
-      )
+        if (validatedInput.quantity <= 0) {
+          removeFromCart(validatedInput.productId)
+          return
+        }
+
+        setItems((currentItems) =>
+          currentItems.map((item) =>
+            item.product.id === validatedInput.productId
+              ? { ...item, quantity: validatedInput.quantity }
+              : item,
+          ),
+        )
+      } catch (error) {
+        console.error('Failed to update quantity:', error)
+      }
     },
     [removeFromCart],
   )
