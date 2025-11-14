@@ -38,8 +38,8 @@ export default function ProductListing({ products }: ProductListingProps) {
             <h2 className="font-semibold text-lg mb-2 line-clamp-2">
               {product.title}
             </h2>
-            <div className="mb-3 h-[4.5rem] overflow-y-auto bg-gray-50">
-              <p className="text-gray-600 text-sm leading-relaxed">
+            <div className="mb-3 overflow-y-auto bg-gray-50 rounded p-2 h-[5.5rem]">
+              <p className="text-gray-600 text-sm leading-6">
                 {product.description}
               </p>
             </div>
