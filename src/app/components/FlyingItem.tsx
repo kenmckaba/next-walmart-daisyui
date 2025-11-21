@@ -27,7 +27,7 @@ export default function FlyingItem({
     // Complete animation after duration
     const completeTimeout = setTimeout(() => {
       onComplete()
-    }, 800) // Animation duration
+    }, 1500) // Animation duration - made slower
 
     return () => {
       clearTimeout(startTimeout)
@@ -42,24 +42,24 @@ export default function FlyingItem({
     <div
       className="fixed pointer-events-none z-[100]"
       style={{
-        left: startPosition.x - 20, // Center the 40px item
-        top: startPosition.y - 20,
+        left: startPosition.x - 30, // Center the 60px item
+        top: startPosition.y - 30,
         transform: isAnimating
-          ? `translate(${deltaX}px, ${deltaY}px) scale(0.3)`
+          ? `translate(${deltaX}px, ${deltaY}px) scale(0.5)`
           : 'translate(0, 0) scale(1)',
         transition: isAnimating
-          ? 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease-out'
+          ? 'transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1.5s ease-out'
           : 'none',
         opacity: isAnimating ? 0 : 1,
       }}
     >
-      <div className="w-10 h-10 bg-white rounded-full shadow-lg border-2 border-blue-500 flex items-center justify-center">
+      <div className="w-15 h-15 bg-white rounded-full shadow-lg border-2 border-blue-500 flex items-center justify-center">
         <Image
           src={productImage}
           alt="Flying product"
-          width={24}
-          height={24}
-          className="w-6 h-6 object-contain"
+          width={32}
+          height={32}
+          className="w-8 h-8 object-contain"
         />
       </div>
     </div>
