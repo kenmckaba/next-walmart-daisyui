@@ -1,8 +1,10 @@
 'use client'
 
 import Image from 'next/image'
+import { useState } from 'react'
 import type { Product } from '../../lib/products'
 import { useCart } from '../context/CartContext'
+import ProductModal from './ProductModal'
 
 type ProductListingProps = {
   products: Product[]
@@ -10,11 +12,23 @@ type ProductListingProps = {
 
 export default function ProductListing({ products }: ProductListingProps) {
   const { addToCart } = useCart()
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleAddToCart = (product: Product) => {
     addToCart(product)
     // Optional: Show a brief feedback message
     console.log(`Added ${product.title} to cart`)
+  }
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedProduct(null)
   }
 
   return (
@@ -25,7 +39,9 @@ export default function ProductListing({ products }: ProductListingProps) {
       {products.map((product) => (
         <article
           key={product.id}
-          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:bg-blue-50 transition-shadow w-full max-w-sm flex flex-col"
+          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:bg-blue-50 transition-shadow w-full max-w-sm flex flex-col cursor-pointer"
+          onClick={() => handleProductClick(product)}
+          onKeyDown={() => handleProductClick(product)}
         >
           <Image
             src={product.thumbnail}
@@ -49,7 +65,10 @@ export default function ProductListing({ products }: ProductListingProps) {
               </span>
               <button
                 type="button"
-                onClick={() => handleAddToCart(product)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleAddToCart(product)
+                }}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
               >
                 Add to Cart
@@ -58,6 +77,13 @@ export default function ProductListing({ products }: ProductListingProps) {
           </div>
         </article>
       ))}
+
+      {/* Product Modal */}
+      <ProductModal
+        product={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   )
 }
