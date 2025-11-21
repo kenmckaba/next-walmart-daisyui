@@ -68,7 +68,7 @@ export default function ProductModal({
         aria-label="Close modal by clicking outside"
         tabIndex={-1}
       />
-      
+
       {/* Modal Content */}
       <div className="relative bg-white rounded-lg shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-gray-300">
         {/* Close Button */}
