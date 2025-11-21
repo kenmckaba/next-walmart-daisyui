@@ -59,9 +59,18 @@ export default function ProductModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <button
+        type="button"
+        className="absolute inset-0 bg-transparent cursor-default"
+        onClick={onClose}
+        aria-label="Close modal by clicking outside"
+        tabIndex={-1}
+      />
+      
       {/* Modal Content */}
-      <div className="relative bg-white rounded-lg shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto pointer-events-auto border-2 border-gray-300">
+      <div className="relative bg-white rounded-lg shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-gray-300">
         {/* Close Button */}
         <button
           type="button"
