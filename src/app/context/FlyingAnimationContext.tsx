@@ -2,12 +2,18 @@
 
 import { createContext, type ReactNode, useContext, useState } from 'react'
 import FlyingItem from '../components/FlyingItem'
+import AddToCartConfirmation from '../components/AddToCartConfirmation'
 
 type FlyingAnimation = {
   id: string
   startPosition: { x: number; y: number }
   endPosition: { x: number; y: number }
   productImage: string
+}
+
+type ConfirmationModal = {
+  id: string
+  position: { x: number; y: number }
 }
 
 type FlyingAnimationContextType = {
@@ -18,6 +24,7 @@ type FlyingAnimationContextType = {
   ) => void
   getCartButtonPosition: () => { x: number; y: number } | null
   setCartButtonRef: (element: HTMLElement | null) => void
+  showConfirmation: (position: { x: number; y: number }) => void
 }
 
 const FlyingAnimationContext = createContext<
@@ -26,6 +33,7 @@ const FlyingAnimationContext = createContext<
 
 export function FlyingAnimationProvider({ children }: { children: ReactNode }) {
   const [animations, setAnimations] = useState<FlyingAnimation[]>([])
+  const [confirmations, setConfirmations] = useState<ConfirmationModal[]>([])
   const [cartButtonElement, setCartButtonElement] =
     useState<HTMLElement | null>(null)
 
@@ -63,12 +71,27 @@ export function FlyingAnimationProvider({ children }: { children: ReactNode }) {
     setAnimations((prev) => prev.filter((anim) => anim.id !== id))
   }
 
+  const showConfirmation = (position: { x: number; y: number }) => {
+    const id = `confirmation-${Date.now()}-${Math.random()}`
+    const newConfirmation: ConfirmationModal = {
+      id,
+      position,
+    }
+
+    setConfirmations((prev) => [...prev, newConfirmation])
+  }
+
+  const removeConfirmation = (id: string) => {
+    setConfirmations((prev) => prev.filter((conf) => conf.id !== id))
+  }
+
   return (
     <FlyingAnimationContext.Provider
       value={{
         startFlyingAnimation,
         getCartButtonPosition,
         setCartButtonRef,
+        showConfirmation,
       }}
     >
       {children}
@@ -81,6 +104,16 @@ export function FlyingAnimationProvider({ children }: { children: ReactNode }) {
           endPosition={animation.endPosition}
           productImage={animation.productImage}
           onComplete={() => removeAnimation(animation.id)}
+        />
+      ))}
+
+      {/* Render all active confirmation modals */}
+      {confirmations.map((confirmation) => (
+        <AddToCartConfirmation
+          key={confirmation.id}
+          show={true}
+          position={confirmation.position}
+          onComplete={() => removeConfirmation(confirmation.id)}
         />
       ))}
     </FlyingAnimationContext.Provider>
