@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useEffect } from 'react'
 import type { Product } from '../../lib/products'
 import { useCart } from '../context/CartContext'
+import { useFlyingAnimation } from '../context/FlyingAnimationContext'
 
 type ProductModalProps = {
   product: Product | null
@@ -17,6 +18,7 @@ export default function ProductModal({
   onClose,
 }: ProductModalProps) {
   const { addToCart } = useCart()
+  const { startFlyingAnimation, getCartButtonPosition } = useFlyingAnimation()
 
   // Close modal on Escape key
   useEffect(() => {
@@ -35,9 +37,19 @@ export default function ProductModal({
     }
   }, [isOpen, onClose])
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (event?: React.MouseEvent) => {
     if (product) {
       addToCart(product)
+
+      // Trigger flying animation from button to cart
+      if (event) {
+        const cartPos = getCartButtonPosition()
+        if (cartPos) {
+          const startPos = { x: event.clientX, y: event.clientY }
+          startFlyingAnimation(startPos, cartPos, product.thumbnail)
+        }
+      }
+
       console.log(`Added ${product.title} to cart`)
     }
   }
@@ -114,7 +126,7 @@ export default function ProductModal({
               <div className="flex gap-3 mt-auto">
                 <button
                   type="button"
-                  onClick={handleAddToCart}
+                  onClick={(e) => handleAddToCart(e)}
                   className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                 >
                   Add to Cart

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import type { Product } from '../../lib/products'
 import { useCart } from '../context/CartContext'
+import { useFlyingAnimation } from '../context/FlyingAnimationContext'
 import ProductModal from './ProductModal'
 
 type ProductListingProps = {
@@ -12,12 +13,22 @@ type ProductListingProps = {
 
 export default function ProductListing({ products }: ProductListingProps) {
   const { addToCart } = useCart()
+  const { startFlyingAnimation, getCartButtonPosition } = useFlyingAnimation()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: Product, event?: React.MouseEvent) => {
     addToCart(product)
-    // Optional: Show a brief feedback message
+
+    // Get cursor position and cart button position for flying animation
+    if (event) {
+      const cartPos = getCartButtonPosition()
+      if (cartPos) {
+        const startPos = { x: event.clientX, y: event.clientY }
+        startFlyingAnimation(startPos, cartPos, product.thumbnail)
+      }
+    }
+
     console.log(`Added ${product.title} to cart`)
   }
 
@@ -67,7 +78,7 @@ export default function ProductListing({ products }: ProductListingProps) {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleAddToCart(product)
+                  handleAddToCart(product, e)
                 }}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
               >

@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useCart } from '../context/CartContext'
+import { useFlyingAnimation } from '../context/FlyingAnimationContext'
 
 export default function CartDisplay() {
   const {
@@ -12,8 +13,10 @@ export default function CartDisplay() {
     removeFromCart,
     updateQuantity,
   } = useCart()
+  const { setCartButtonRef } = useFlyingAnimation()
   const [isOpen, setIsOpen] = useState(false)
   const cartRef = useRef<HTMLDivElement>(null)
+  const cartButtonRef = useRef<HTMLButtonElement>(null)
 
   // Close cart when clicking outside
   useEffect(() => {
@@ -31,9 +34,17 @@ export default function CartDisplay() {
     }
   }, [isOpen])
 
+  // Register cart button position for flying animation
+  useEffect(() => {
+    if (cartButtonRef.current) {
+      setCartButtonRef(cartButtonRef.current)
+    }
+  }, [setCartButtonRef])
+
   return (
     <div ref={cartRef} className="relative">
       <button
+        ref={cartButtonRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
