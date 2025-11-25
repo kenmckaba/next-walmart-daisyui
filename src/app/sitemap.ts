@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { API_CONFIG, API_ENDPOINTS } from '../lib/config'
 
 type Category = {
   name: string
@@ -11,7 +12,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://walmart.com'
 
   try {
-    const response = await fetch('https://dummyjson.com/products/categories')
+    const response = await fetch(
+      `${API_CONFIG.BASE_URL}${API_ENDPOINTS.CATEGORIES}`,
+    )
     const categories: Category[] = await response.json()
 
     const categoryUrls = categories.map((category) => ({

@@ -3,6 +3,7 @@ import {
   APIValidationError,
   fetchAndValidate,
 } from './api-validation'
+import { API_CONFIG, API_ENDPOINTS } from './config'
 import { CategoriesResponseSchema, type Category } from './schemas'
 
 export type { Category }
@@ -11,7 +12,7 @@ export type { Category }
 export async function getCategories(): Promise<Category[]> {
   try {
     const validatedResponse = await fetchAndValidate(
-      'https://dummyjson.com/products/categories',
+      `${API_CONFIG.BASE_URL}${API_ENDPOINTS.CATEGORIES}`,
       CategoriesResponseSchema,
       {
         next: { revalidate: 3600 }, // Cache for 1 hour

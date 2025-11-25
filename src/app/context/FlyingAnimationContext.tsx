@@ -1,8 +1,8 @@
 'use client'
 
 import { createContext, type ReactNode, useContext, useState } from 'react'
-import FlyingItem from '../components/FlyingItem'
 import AddToCartConfirmation from '../components/AddToCartConfirmation'
+import FlyingItem from '../components/FlyingItem'
 
 type FlyingAnimation = {
   id: string

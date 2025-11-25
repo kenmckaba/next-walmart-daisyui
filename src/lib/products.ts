@@ -3,6 +3,7 @@ import {
   APIValidationError,
   fetchAndValidate,
 } from './api-validation'
+import { API_CONFIG, API_ENDPOINTS } from './config'
 import { type Product, ProductsResponseSchema } from './schemas'
 
 export type { Product }
@@ -12,7 +13,7 @@ export async function getProducts(
   limit: number = 0,
 ): Promise<Product[]> {
   try {
-    const url = `https://dummyjson.com/products/category/${category}${limit > 0 ? `?limit=${limit}` : ''}`
+    const url = `${API_CONFIG.BASE_URL}${API_ENDPOINTS.PRODUCT_BY_CATEGORY}/${category}${limit > 0 ? `?limit=${limit}` : ''}`
 
     const validatedResponse = await fetchAndValidate(
       url,
