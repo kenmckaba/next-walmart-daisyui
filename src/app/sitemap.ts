@@ -9,6 +9,7 @@ type Category = {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch categories for dynamic sitemap generation
+  console.log('Base URL:', process.env.NEXT_PUBLIC_BASE_URL)
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://walmart.com'
 
   try {

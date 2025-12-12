@@ -15,6 +15,7 @@ export async function getProducts(
   try {
     const url = `${API_CONFIG.BASE_URL}${API_ENDPOINTS.PRODUCT_BY_CATEGORY}/${category}${limit > 0 ? `?limit=${limit}` : ''}`
 
+    console.log('@ken getProducts', url)
     const validatedResponse = await fetchAndValidate(
       url,
       ProductsResponseSchema,
