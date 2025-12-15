@@ -8,17 +8,87 @@ import StructuredData from './components/StructuredData'
 export const metadata = {
   title: 'Walmart - Shop Online for Great Deals',
   description:
-    'Shop Walmart online for great deals on thousands of products. Browse by category and find everything you need.',
+    'Shop Walmart online for great deals on thousands of products. Browse by category and find everything you need. Free shipping and pickup available.',
+  keywords: [
+    'walmart',
+    'online shopping',
+    'great deals',
+    'free shipping',
+    'categories',
+    'electronics',
+    'groceries',
+  ],
   openGraph: {
     title: 'Walmart - Shop Online for Great Deals',
     description:
+      'Shop Walmart online for great deals on thousands of products. Browse by category and find everything you need.',
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://walmart.com',
+    siteName: 'Walmart',
+    images: [
+      {
+        url: '/walmart-logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Walmart - Save Money. Live Better.',
+        type: 'image/png',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@walmart',
+    creator: '@walmart',
+    title: 'Walmart - Shop Online for Great Deals',
+    description:
       'Shop Walmart online for great deals on thousands of products.',
+    images: [
+      {
+        url: '/walmart-logo.png',
+        alt: 'Walmart - Save Money. Live Better.',
+      },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 }
 
 export default async function HomePage() {
   const categories = await getAllCategories()
   const productImages = new Map<string, string>()
+
+  // Structured Data for Organization and WebSite
+  const organizationStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Walmart',
+    url: 'https://walmart.com',
+    logo: 'https://walmart.com/walmart-logo.png',
+    description: 'Save Money. Live Better.',
+    sameAs: [
+      'https://www.facebook.com/walmart',
+      'https://twitter.com/walmart',
+      'https://www.instagram.com/walmart',
+      'https://www.youtube.com/walmart',
+    ],
+  }
+
+  const websiteStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Walmart',
+    url: 'https://walmart.com',
+    description:
+      'Shop Walmart online for great deals on thousands of products.',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://walmart.com/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  }
 
   console.log('Fetched categories:', categories.length)
   await Promise.all(
@@ -63,6 +133,8 @@ export default async function HomePage() {
   return (
     <>
       <StructuredData data={structuredData} />
+      <StructuredData data={organizationStructuredData} />
+      <StructuredData data={websiteStructuredData} />
       <div className="font-sans min-h-screen">
         <ServerHeader />
         <div className="w-full px-4 py-8">

@@ -30,9 +30,46 @@ export async function generateMetadata({
   return {
     title: `${categoryName} Products - Walmart`,
     description: `Shop ${categoryName} products at Walmart. Find great deals and quality items.`,
+    keywords: [
+      categoryName.toLowerCase(),
+      'walmart',
+      'products',
+      'deals',
+      'shopping',
+    ],
     openGraph: {
       title: `${categoryName} Products - Walmart`,
-      description: `Shop ${categoryName} products at Walmart`,
+      description: `Shop ${categoryName} products at Walmart. Find great deals and quality items.`,
+      type: 'website',
+      locale: 'en_US',
+      url: `https://walmart.com/category/${slug}`,
+      siteName: 'Walmart',
+      images: [
+        {
+          url: '/walmart-logo.png',
+          width: 1200,
+          height: 630,
+          alt: `${categoryName} Products at Walmart`,
+          type: 'image/png',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@walmart',
+      creator: '@walmart',
+      title: `${categoryName} Products - Walmart`,
+      description: `Shop ${categoryName} products at Walmart. Find great deals and quality items.`,
+      images: [
+        {
+          url: '/walmart-logo.png',
+          alt: `${categoryName} Products at Walmart`,
+        },
+      ],
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   }
 }
