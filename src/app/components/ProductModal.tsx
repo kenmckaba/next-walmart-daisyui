@@ -18,7 +18,7 @@ export default function ProductModal({
   onClose,
 }: ProductModalProps) {
   const { addToCart } = useCart()
-  const { openCartModal, showConfirmation } = useOpenCart()
+  const { openCartModal } = useOpenCart()
 
   // Close modal on Escape key
   useEffect(() => {
@@ -43,16 +43,6 @@ export default function ProductModal({
 
       // Open cart modal instead of flying animation
       openCartModal()
-
-      // Show confirmation modal above the button
-      if (event) {
-        const buttonRect = (event.target as HTMLElement).getBoundingClientRect()
-        const confirmationPos = {
-          x: buttonRect.left + buttonRect.width / 2,
-          y: buttonRect.top,
-        }
-        showConfirmation(confirmationPos)
-      }
 
       console.log(`Added ${product.title} to cart`)
     }

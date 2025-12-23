@@ -13,7 +13,7 @@ type ProductListingProps = {
 
 export default function ProductListing({ products }: ProductListingProps) {
   const { addToCart } = useCart()
-  const { openCartModal, showConfirmation } = useOpenCart()
+  const { openCartModal } = useOpenCart()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -22,16 +22,6 @@ export default function ProductListing({ products }: ProductListingProps) {
 
     // Open cart modal instead of flying animation
     openCartModal()
-
-    // Show confirmation modal above the button
-    if (event) {
-      const buttonRect = (event.target as HTMLElement).getBoundingClientRect()
-      const confirmationPos = {
-        x: buttonRect.left + buttonRect.width / 2,
-        y: buttonRect.top,
-      }
-      showConfirmation(confirmationPos)
-    }
 
     console.log(`Added ${product.title} to cart`)
   }
