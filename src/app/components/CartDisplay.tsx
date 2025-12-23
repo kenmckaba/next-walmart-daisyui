@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useCart } from '../context/CartContext'
 import { useOpenCart } from '../context/OpenCartContext'
 
@@ -17,13 +17,34 @@ export default function CartDisplay() {
     closeCartModal,
   } = useCart()
   const { setCartButtonRef } = useOpenCart()
-  const cartRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
   const cartButtonRef = useRef<HTMLButtonElement>(null)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [shouldRender, setShouldRender] = useState(false)
+
+  // Handle animation states when modal opens/closes
+  useEffect(() => {
+    if (isCartModalOpen) {
+      setShouldRender(true)
+      // Start animation after render
+      const timer = setTimeout(() => setIsAnimating(true), 10)
+      return () => clearTimeout(timer)
+    } else {
+      setIsAnimating(false)
+      // Remove from DOM after animation completes
+      const timer = setTimeout(() => setShouldRender(false), 500)
+      return () => clearTimeout(timer)
+    }
+  }, [isCartModalOpen])
 
   // Close cart when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         closeCartModal()
       }
     }
@@ -44,7 +65,7 @@ export default function CartDisplay() {
   }, [setCartButtonRef])
 
   return (
-    <div ref={cartRef} className="relative">
+    <div ref={containerRef} className="relative">
       <button
         ref={cartButtonRef}
         type="button"
@@ -68,8 +89,14 @@ export default function CartDisplay() {
         Cart ({getTotalItems()})
       </button>
 
-      {isCartModalOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+      {shouldRender && (
+        <div
+          ref={modalRef}
+          className={`absolute right-0 top-full w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50
+            transition-transform duration-500 ease-out transform-gpu origin-top
+            ${isAnimating ? 'translate-y-0 scale-y-100' : 'translate-y-0 scale-y-0'}
+          `}
+        >
           <div className="p-4">
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-semibold text-lg">Shopping Cart</h3>
