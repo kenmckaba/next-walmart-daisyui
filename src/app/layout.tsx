@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { CartProvider } from './context/CartContext'
-import { FlyingAnimationProvider } from './context/FlyingAnimationContext'
+import { OpenCartProvider } from './context/OpenCartContext'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -73,7 +73,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
-          <FlyingAnimationProvider>{children}</FlyingAnimationProvider>
+          <OpenCartProvider>{children}</OpenCartProvider>
         </CartProvider>
       </body>
     </html>

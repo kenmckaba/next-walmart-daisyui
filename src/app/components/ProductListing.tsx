@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import type { Product } from '../../lib/products'
 import { useCart } from '../context/CartContext'
-import { useFlyingAnimation } from '../context/FlyingAnimationContext'
+import { useOpenCart } from '../context/OpenCartContext'
 import ProductModal from './ProductModal'
 
 type ProductListingProps = {
@@ -13,23 +13,18 @@ type ProductListingProps = {
 
 export default function ProductListing({ products }: ProductListingProps) {
   const { addToCart } = useCart()
-  const { startFlyingAnimation, getCartButtonPosition, showConfirmation } =
-    useFlyingAnimation()
+  const { openCartModal, showConfirmation } = useOpenCart()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleAddToCart = (product: Product, event?: React.MouseEvent) => {
     addToCart(product)
 
-    // Get cursor position and cart button position for flying animation
-    if (event) {
-      const cartPos = getCartButtonPosition()
-      if (cartPos) {
-        const startPos = { x: event.clientX, y: event.clientY }
-        startFlyingAnimation(startPos, cartPos, product.thumbnail)
-      }
+    // Open cart modal instead of flying animation
+    openCartModal()
 
-      // Show confirmation modal above the button
+    // Show confirmation modal above the button
+    if (event) {
       const buttonRect = (event.target as HTMLElement).getBoundingClientRect()
       const confirmationPos = {
         x: buttonRect.left + buttonRect.width / 2,

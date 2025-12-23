@@ -25,12 +25,24 @@ type CartContextType = {
   clearCart: () => void
   getTotalItems: () => number
   getTotalPrice: () => number
+  isCartModalOpen: boolean
+  openCartModal: () => void
+  closeCartModal: () => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false)
+
+  const openCartModal = useCallback(() => {
+    setIsCartModalOpen(true)
+  }, [])
+
+  const closeCartModal = useCallback(() => {
+    setIsCartModalOpen(false)
+  }, [])
 
   const addToCart = useCallback((product: Product) => {
     try {
@@ -125,6 +137,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     clearCart,
     getTotalItems,
     getTotalPrice,
+    isCartModalOpen,
+    openCartModal,
+    closeCartModal,
   }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

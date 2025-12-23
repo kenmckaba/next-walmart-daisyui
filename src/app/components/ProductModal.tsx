@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useEffect } from 'react'
 import type { Product } from '../../lib/products'
 import { useCart } from '../context/CartContext'
-import { useFlyingAnimation } from '../context/FlyingAnimationContext'
+import { useOpenCart } from '../context/OpenCartContext'
 
 type ProductModalProps = {
   product: Product | null
@@ -18,8 +18,7 @@ export default function ProductModal({
   onClose,
 }: ProductModalProps) {
   const { addToCart } = useCart()
-  const { startFlyingAnimation, getCartButtonPosition, showConfirmation } =
-    useFlyingAnimation()
+  const { openCartModal, showConfirmation } = useOpenCart()
 
   // Close modal on Escape key
   useEffect(() => {
@@ -42,15 +41,11 @@ export default function ProductModal({
     if (product) {
       addToCart(product)
 
-      // Trigger flying animation from button to cart
-      if (event) {
-        const cartPos = getCartButtonPosition()
-        if (cartPos) {
-          const startPos = { x: event.clientX, y: event.clientY }
-          startFlyingAnimation(startPos, cartPos, product.thumbnail)
-        }
+      // Open cart modal instead of flying animation
+      openCartModal()
 
-        // Show confirmation modal above the button
+      // Show confirmation modal above the button
+      if (event) {
         const buttonRect = (event.target as HTMLElement).getBoundingClientRect()
         const confirmationPos = {
           x: buttonRect.left + buttonRect.width / 2,

@@ -1,9 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useCart } from '../context/CartContext'
-import { useFlyingAnimation } from '../context/FlyingAnimationContext'
+import { useOpenCart } from '../context/OpenCartContext'
 
 export default function CartDisplay() {
   const {
@@ -12,9 +12,11 @@ export default function CartDisplay() {
     getTotalPrice,
     removeFromCart,
     updateQuantity,
+    isCartModalOpen,
+    openCartModal,
+    closeCartModal,
   } = useCart()
-  const { setCartButtonRef } = useFlyingAnimation()
-  const [isOpen, setIsOpen] = useState(false)
+  const { setCartButtonRef } = useOpenCart()
   const cartRef = useRef<HTMLDivElement>(null)
   const cartButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -22,17 +24,17 @@ export default function CartDisplay() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
+        closeCartModal()
       }
     }
 
-    if (isOpen) {
+    if (isCartModalOpen) {
       document.addEventListener('mousedown', handleClickOutside)
       return () => {
         document.removeEventListener('mousedown', handleClickOutside)
       }
     }
-  }, [isOpen])
+  }, [isCartModalOpen, closeCartModal])
 
   // Register cart button position for flying animation
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function CartDisplay() {
       <button
         ref={cartButtonRef}
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => openCartModal()}
         className="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
         <svg
@@ -66,10 +68,33 @@ export default function CartDisplay() {
         Cart ({getTotalItems()})
       </button>
 
-      {isOpen && (
+      {isCartModalOpen && (
         <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
           <div className="p-4">
-            <h3 className="font-semibold text-lg mb-3">Shopping Cart</h3>
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="font-semibold text-lg">Shopping Cart</h3>
+              <button
+                type="button"
+                onClick={() => closeCartModal()}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg
+                  role="img"
+                  aria-label="Close cart"
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
             {getTotalItems() === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <svg

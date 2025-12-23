@@ -2,40 +2,29 @@
 
 import { createContext, type ReactNode, useContext, useState } from 'react'
 import AddToCartConfirmation from '../components/AddToCartConfirmation'
-import FlyingItem from '../components/FlyingItem'
-
-type FlyingAnimation = {
-  id: string
-  startPosition: { x: number; y: number }
-  endPosition: { x: number; y: number }
-  productImage: string
-}
+import { useCart } from './CartContext'
 
 type ConfirmationModal = {
   id: string
   position: { x: number; y: number }
 }
 
-type FlyingAnimationContextType = {
-  startFlyingAnimation: (
-    startPos: { x: number; y: number },
-    endPos: { x: number; y: number },
-    productImage: string,
-  ) => void
+type OpenCartContextType = {
+  openCartModal: () => void
   getCartButtonPosition: () => { x: number; y: number } | null
   setCartButtonRef: (element: HTMLElement | null) => void
   showConfirmation: (position: { x: number; y: number }) => void
 }
 
-const FlyingAnimationContext = createContext<
-  FlyingAnimationContextType | undefined
->(undefined)
+const OpenCartContext = createContext<OpenCartContextType | undefined>(
+  undefined,
+)
 
-export function FlyingAnimationProvider({ children }: { children: ReactNode }) {
-  const [animations, setAnimations] = useState<FlyingAnimation[]>([])
+export function OpenCartProvider({ children }: { children: ReactNode }) {
   const [confirmations, setConfirmations] = useState<ConfirmationModal[]>([])
   const [cartButtonElement, setCartButtonElement] =
     useState<HTMLElement | null>(null)
+  const { openCartModal: openCart } = useCart()
 
   const setCartButtonRef = (element: HTMLElement | null) => {
     setCartButtonElement(element)
@@ -51,24 +40,8 @@ export function FlyingAnimationProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const startFlyingAnimation = (
-    startPos: { x: number; y: number },
-    endPos: { x: number; y: number },
-    productImage: string,
-  ) => {
-    const id = `flying-${Date.now()}-${Math.random()}`
-    const newAnimation: FlyingAnimation = {
-      id,
-      startPosition: startPos,
-      endPosition: endPos,
-      productImage,
-    }
-
-    setAnimations((prev) => [...prev, newAnimation])
-  }
-
-  const removeAnimation = (id: string) => {
-    setAnimations((prev) => prev.filter((anim) => anim.id !== id))
+  const openCartModal = () => {
+    openCart()
   }
 
   const showConfirmation = (position: { x: number; y: number }) => {
@@ -86,26 +59,15 @@ export function FlyingAnimationProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <FlyingAnimationContext.Provider
+    <OpenCartContext.Provider
       value={{
-        startFlyingAnimation,
+        openCartModal,
         getCartButtonPosition,
         setCartButtonRef,
         showConfirmation,
       }}
     >
       {children}
-
-      {/* Render all active flying animations */}
-      {animations.map((animation) => (
-        <FlyingItem
-          key={animation.id}
-          startPosition={animation.startPosition}
-          endPosition={animation.endPosition}
-          productImage={animation.productImage}
-          onComplete={() => removeAnimation(animation.id)}
-        />
-      ))}
 
       {/* Render all active confirmation modals */}
       {confirmations.map((confirmation) => (
@@ -116,16 +78,14 @@ export function FlyingAnimationProvider({ children }: { children: ReactNode }) {
           onComplete={() => removeConfirmation(confirmation.id)}
         />
       ))}
-    </FlyingAnimationContext.Provider>
+    </OpenCartContext.Provider>
   )
 }
 
-export function useFlyingAnimation() {
-  const context = useContext(FlyingAnimationContext)
+export function useOpenCart() {
+  const context = useContext(OpenCartContext)
   if (context === undefined) {
-    throw new Error(
-      'useFlyingAnimation must be used within a FlyingAnimationProvider',
-    )
+    throw new Error('useOpenCart must be used within a OpenCartProvider')
   }
   return context
 }
