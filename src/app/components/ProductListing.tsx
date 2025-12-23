@@ -17,7 +17,7 @@ export default function ProductListing({ products }: ProductListingProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleAddToCart = (product: Product, event?: React.MouseEvent) => {
+  const handleAddToCart = (product: Product) => {
     addToCart(product)
 
     // Open cart modal instead of flying animation
@@ -72,7 +72,7 @@ export default function ProductListing({ products }: ProductListingProps) {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleAddToCart(product, e)
+                  handleAddToCart(product)
                 }}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
               >

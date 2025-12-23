@@ -37,7 +37,7 @@ export default function ProductModal({
     }
   }, [isOpen, onClose])
 
-  const handleAddToCart = (event?: React.MouseEvent) => {
+  const handleAddToCart = () => {
     if (product) {
       addToCart(product)
 
@@ -129,7 +129,7 @@ export default function ProductModal({
               <div className="flex gap-3 mt-auto">
                 <button
                   type="button"
-                  onClick={(e) => handleAddToCart(e)}
+                  onClick={() => handleAddToCart()}
                   className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                 >
                   Add to Cart
