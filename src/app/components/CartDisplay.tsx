@@ -57,6 +57,22 @@ export default function CartDisplay() {
     }
   }, [isCartModalOpen, closeCartModal])
 
+  // Close cart when pressing Escape key
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeCartModal()
+      }
+    }
+
+    if (isCartModalOpen) {
+      document.addEventListener('keydown', handleEscapeKey)
+      return () => {
+        document.removeEventListener('keydown', handleEscapeKey)
+      }
+    }
+  }, [isCartModalOpen, closeCartModal])
+
   // Register cart button position for flying animation
   useEffect(() => {
     if (cartButtonRef.current) {
@@ -92,12 +108,19 @@ export default function CartDisplay() {
       {shouldRender && (
         <>
           {/* Invisible overlay to capture clicks outside cart */}
-          <div
+          <button
+            type="button"
+            tabIndex={-1}
             className="fixed inset-0 z-40"
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
               closeCartModal()
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                closeCartModal()
+              }
             }}
           />
           <div
