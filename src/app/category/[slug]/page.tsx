@@ -121,7 +121,6 @@ export default async function CategoryPage({
 
   return (
     <>
-      {/* eslint-disable-next-line react/no-danger */}
       <StructuredData data={structuredData} />
       <div className="font-sans min-h-screen">
         <ServerHeader selectedCategory={slug} />
