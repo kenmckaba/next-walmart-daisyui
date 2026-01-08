@@ -14,7 +14,7 @@ export default async function ServerHeader({
   const categories = await getCategories()
 
   return (
-    <header className="w-full bg-white shadow-sm border-b border-gray-200 py-2 sm:py-1">
+    <header className="sticky top-0 w-full bg-white shadow-sm border-b border-gray-200 py-2 sm:py-1 z-40">
       <div className="flex items-center w-full px-2 sm:px-4">
         {/* Walmart Logo */}
         <div className="flex items-center flex-shrink-0">
