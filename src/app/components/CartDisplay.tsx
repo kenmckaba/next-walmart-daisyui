@@ -86,7 +86,7 @@ export default function CartDisplay() {
         ref={cartButtonRef}
         type="button"
         onClick={() => openCartModal()}
-        className="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="flex items-center gap-2 px-3 sm:px-4 py-3 sm:py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 min-h-[44px] sm:min-h-auto touch-manipulation transition-colors"
       >
         <svg
           className="w-5 h-5"
@@ -108,26 +108,24 @@ export default function CartDisplay() {
       {shouldRender && (
         <>
           {/* Invisible overlay to capture clicks outside cart */}
-          <button
-            type="button"
-            tabIndex={-1}
-            className="fixed inset-0 z-40"
+          <div
+            className="fixed inset-0 z-40 bg-black bg-opacity-10 sm:bg-transparent"
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
               closeCartModal()
             }}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                closeCartModal()
-              }
-            }}
+            aria-hidden="true"
           />
           <div
             ref={modalRef}
-            className={`absolute right-0 top-full w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50
-              transition-transform duration-500 ease-out transform-gpu origin-top
-              ${isAnimating ? 'translate-y-0 scale-y-100' : 'translate-y-0 scale-y-0'}
+            className={`fixed sm:absolute inset-0 sm:inset-auto sm:right-0 sm:top-full w-full sm:w-80 bg-white sm:rounded-lg shadow-lg border-0 sm:border border-gray-200 z-50
+              transition-all duration-500 ease-out transform-gpu sm:origin-top
+              ${
+                isAnimating
+                  ? 'translate-y-0 sm:scale-y-100'
+                  : 'translate-y-full sm:translate-y-0 sm:scale-y-0'
+              }
             `}
           >
             <div className="p-4">
@@ -136,7 +134,8 @@ export default function CartDisplay() {
                 <button
                   type="button"
                   onClick={() => closeCartModal()}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 p-2 -m-2 min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
+                  aria-label="Close cart"
                 >
                   <svg
                     role="img"
@@ -204,11 +203,12 @@ export default function CartDisplay() {
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity - 1)
                           }
-                          className="w-6 h-6 flex items-center justify-center bg-gray-100 rounded text-xs hover:bg-gray-200"
+                          className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded text-sm hover:bg-gray-200 touch-manipulation"
+                          aria-label="Decrease quantity"
                         >
                           -
                         </button>
-                        <span className="text-sm w-8 text-center">
+                        <span className="text-sm w-8 text-center font-medium">
                           {item.quantity}
                         </span>
                         <button
@@ -216,14 +216,16 @@ export default function CartDisplay() {
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity + 1)
                           }
-                          className="w-6 h-6 flex items-center justify-center bg-gray-100 rounded text-xs hover:bg-gray-200"
+                          className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded text-sm hover:bg-gray-200 touch-manipulation"
+                          aria-label="Increase quantity"
                         >
                           +
                         </button>
                         <button
                           type="button"
                           onClick={() => removeFromCart(item.product.id)}
-                          className="ml-2 text-red-500 hover:text-red-700 text-xs"
+                          className="ml-2 text-red-500 hover:text-red-700 text-xs px-2 py-1 hover:bg-red-50 rounded touch-manipulation"
+                          aria-label="Remove item"
                         >
                           Remove
                         </button>
@@ -234,11 +236,13 @@ export default function CartDisplay() {
               )}
               {getTotalItems() > 0 && (
                 <div className="mt-4 pt-3 border-t border-gray-200">
-                  <div className="flex justify-between items-center font-semibold">
-                    <span>Total: ${getTotalPrice().toLocaleString()}</span>
+                  <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-0">
+                    <span className="font-semibold text-lg text-center sm:text-left">
+                      Total: ${getTotalPrice().toLocaleString()}
+                    </span>
                     <button
                       type="button"
-                      className="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600"
+                      className="bg-green-500 text-white px-6 py-3 sm:px-4 sm:py-2 rounded text-sm font-medium hover:bg-green-600 active:bg-green-700 min-h-[44px] sm:min-h-auto touch-manipulation transition-colors"
                     >
                       Checkout
                     </button>

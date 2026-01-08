@@ -67,13 +67,14 @@ export default function ScrollableNavigation({
       {/* All Categories Button - Fixed on the left */}
       <Link
         href="/"
-        className={`flex-shrink-0 px-3 py-1 rounded text-sm transition-colors whitespace-nowrap mr-3 ${
+        className={`flex-shrink-0 px-3 sm:px-4 py-2 sm:py-1 rounded text-sm transition-colors whitespace-nowrap mr-2 sm:mr-3 min-h-[44px] sm:min-h-auto flex items-center ${
           !selectedCategory
             ? 'bg-blue-500 text-white'
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`}
       >
-        All Categories
+        <span className="hidden sm:inline">All Categories</span>
+        <span className="sm:hidden">All</span>
       </Link>
 
       {/* Left Arrow Button */}
@@ -81,7 +82,7 @@ export default function ScrollableNavigation({
         type="button"
         onClick={scrollLeft}
         disabled={!canScrollLeft}
-        className={`flex-shrink-0 p-1 rounded-full mr-2 transition-colors ${
+        className={`hidden sm:flex flex-shrink-0 p-2 rounded-full mr-2 transition-colors min-h-[44px] min-w-[44px] items-center justify-center ${
           canScrollLeft
             ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
             : 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -108,14 +109,13 @@ export default function ScrollableNavigation({
       <div
         ref={scrollContainerRef}
         className="flex overflow-x-auto scrollbar-hide gap-2 flex-1"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {categories.map((category) => (
           <Link
             key={category.slug}
             href={`/category/${category.slug}`}
             data-category={category.slug}
-            className={`flex-shrink-0 px-3 py-1 rounded text-sm transition-colors whitespace-nowrap ${
+            className={`flex-shrink-0 px-3 sm:px-4 py-2 sm:py-1 rounded text-sm transition-colors whitespace-nowrap min-h-[44px] sm:min-h-auto flex items-center ${
               selectedCategory === category.slug
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -131,7 +131,7 @@ export default function ScrollableNavigation({
         type="button"
         onClick={scrollRight}
         disabled={!canScrollRight}
-        className={`flex-shrink-0 p-1 rounded-full ml-2 transition-colors ${
+        className={`hidden sm:flex flex-shrink-0 p-2 rounded-full ml-2 transition-colors min-h-[44px] min-w-[44px] items-center justify-center ${
           canScrollRight
             ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
             : 'bg-gray-100 text-gray-400 cursor-not-allowed'

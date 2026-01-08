@@ -37,14 +37,11 @@ export default function ProductListing({ products }: ProductListingProps) {
   }
 
   return (
-    <div
-      className="grid gap-3 justify-items-center"
-      style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
-    >
+    <div className="grid gap-4 sm:gap-6 justify-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {products.map((product) => (
         <article
           key={product.id}
-          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:bg-blue-50 transition-shadow w-full max-w-sm flex flex-col cursor-pointer"
+          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:bg-blue-50 transition-shadow w-full max-w-sm flex flex-col cursor-pointer active:scale-95 sm:active:scale-100 touch-manipulation"
           onClick={() => handleProductClick(product)}
           onKeyDown={() => handleProductClick(product)}
         >
@@ -74,7 +71,7 @@ export default function ProductListing({ products }: ProductListingProps) {
                   e.stopPropagation()
                   handleAddToCart(product)
                 }}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
+                className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-4 py-3 sm:py-2 rounded text-sm min-h-[44px] sm:min-h-auto touch-manipulation transition-colors"
               >
                 Add to Cart
               </button>

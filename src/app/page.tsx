@@ -137,55 +137,56 @@ export default async function HomePage() {
       <StructuredData data={websiteStructuredData} />
       <div className="font-sans min-h-screen">
         <ServerHeader />
-        <div className="w-full px-4 py-8">
-          <section className="text-center mb-12 max-w-7xl mx-auto">
-            <h1 className="text-4xl font-bold mb-4">Welcome to Walmart</h1>
-            <p className="text-xl text-gray-600 mb-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <section className="text-center mb-8 sm:mb-12 max-w-7xl mx-auto">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">
+              Welcome to Walmart
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 px-4 sm:px-0">
               Shop thousands of products across all categories with great deals
               and fast delivery
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-8 max-w-7xl mx-auto">
+          <section className="max-w-7xl mx-auto">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 px-4 sm:px-0">
               Shop by Category
             </h2>
-            <div
-              className="grid gap-6 justify-items-center justify-center"
-              style={{
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 240px))',
-              }}
-            >
+            <div className="grid gap-4 sm:gap-6 justify-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {categories.map((category) => (
                 <Link
                   key={category.slug}
                   href={`/category/${category.slug}`}
-                  className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-6 text-center w-full max-w-[240px]"
+                  className="group bg-white rounded-lg shadow-md hover:shadow-lg active:scale-95 sm:active:scale-100 transition-all duration-200 p-4 sm:p-6 text-center w-full touch-manipulation"
                 >
-                  <div className="mb-4 relative">
-                    <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors"></div>
+                  <div className="mb-3 sm:mb-4 relative">
+                    <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-red-200 transition-colors"></div>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Image
                         src={productImages.get(category.slug) || ''}
                         alt={category.name}
                         width={500}
                         height={500}
-                        className="w-40 h-40 object-contain"
+                        className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 object-contain"
                       />
                     </div>
                   </div>
-                  <h3 className="font-semibold text-lg capitalize group-hover:text-blue-600 transition-colors">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg capitalize group-hover:text-blue-600 transition-colors leading-tight">
                     {category.name}
                   </h3>
-                  <p className="text-sm text-gray-500 mt-2">Shop now →</p>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+                    Shop now →
+                  </p>
                 </Link>
               ))}
             </div>
           </section>
 
-          <section className="mt-16 bg-gray-50 rounded-lg p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4">Why Shop with Walmart?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+          <section className="mt-12 sm:mt-16 bg-gray-50 rounded-lg p-6 sm:p-8 text-center max-w-7xl mx-auto">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">
+              Why Shop with Walmart?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-6 sm:mt-8">
               <div>
                 <div className="w-12 h-12 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4">
                   <svg
