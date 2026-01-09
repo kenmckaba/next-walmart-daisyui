@@ -91,7 +91,9 @@ export default function ProductModal({
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Product Image */}
-            <div className="flex justify-center">
+            <div className="flex justify-center flex-col items-center">
+              <h1 className="text-2xl font-bold mb-3">{product.title}</h1>
+
               <Image
                 src={product.thumbnail}
                 alt={product.title}
@@ -104,8 +106,6 @@ export default function ProductModal({
 
             {/* Product Details */}
             <div className="flex flex-col">
-              <h1 className="text-2xl font-bold mb-3">{product.title}</h1>
-
               <div className="mb-4">
                 <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium capitalize">
                   {product.category}
