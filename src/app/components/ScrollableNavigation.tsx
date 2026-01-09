@@ -82,7 +82,7 @@ export default function ScrollableNavigation({
         type="button"
         onClick={scrollLeft}
         disabled={!canScrollLeft}
-        className={`hidden sm:flex flex-shrink-0 p-2 rounded-full mr-2 transition-colors min-h-[44px] min-w-[44px] items-center justify-center ${
+        className={`flex flex-shrink-0 p-2 rounded-full mr-2 transition-colors min-h-[44px] min-w-[44px] items-center justify-center ${
           canScrollLeft
             ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
             : 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -131,7 +131,7 @@ export default function ScrollableNavigation({
         type="button"
         onClick={scrollRight}
         disabled={!canScrollRight}
-        className={`hidden sm:flex flex-shrink-0 p-2 rounded-full ml-2 transition-colors min-h-[44px] min-w-[44px] items-center justify-center ${
+        className={`flex flex-shrink-0 p-2 rounded-full ml-2 transition-colors min-h-[44px] min-w-[44px] items-center justify-center ${
           canScrollRight
             ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
             : 'bg-gray-100 text-gray-400 cursor-not-allowed'
