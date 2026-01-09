@@ -37,8 +37,9 @@ export default function ProductListing({ products }: ProductListingProps) {
   }
 
   return (
-    <div className="grid gap-4 sm:gap-6 justify-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {products.map((product) => (
+    <div className="mx-auto px-4">
+      <div className="grid gap-4 sm:gap-6 justify-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 max-w-fit mx-auto">
+        {products.map((product) => (
         <article
           key={product.id}
           className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:bg-blue-50 transition-shadow w-full max-w-sm flex flex-col cursor-pointer active:scale-95 sm:active:scale-100 touch-manipulation"
@@ -86,6 +87,7 @@ export default function ProductListing({ products }: ProductListingProps) {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
       />
+      </div>
     </div>
   )
 }
